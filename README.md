@@ -3,6 +3,22 @@
 Учебный проект по базам данных: SQLAlchemy Core, SQLAlchemy ORM, Alembic и PostgreSQL.
 Работы по MongoDB и Redis также сохранены в репозитории.
 
+## MongoDB — вложенные документы, индексы и аналитика
+
+Новая работа: [mongo_orders.py](mongo_orders.py), отчёт для сдачи —
+[LMS_MONGODB.md](LMS_MONGODB.md). Коллекция `shop_orders` содержит 2000 заказов
+с вложенными адресами, контактами, оплатой и массивами товаров.
+Класс `OrderRepository` реализует методы коллекции и три агрегации;
+`explain` подтверждает использование составных индексов.
+
+```bash
+docker compose -p specdb up -d mongodb
+source .venv/bin/activate
+pip install -r requirements.txt
+python mongo_orders.py
+python -m unittest -v test_mongo_orders
+```
+
 ## ORM и Alembic — быстрый запуск
 
 ```bash
