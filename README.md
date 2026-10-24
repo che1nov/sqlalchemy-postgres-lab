@@ -3,6 +3,23 @@
 Учебный проект по базам данных: SQLAlchemy Core, SQLAlchemy ORM, Alembic и PostgreSQL.
 Работы по MongoDB и Redis также сохранены в репозитории.
 
+## Redis — TTL, Pub/Sub и очередь задач
+
+Код: [redis_lab](redis_lab). Инструкция для запуска и сдачи:
+[LMS_REDIS.md](LMS_REDIS.md).
+
+```bash
+docker compose -p specdb up -d redis
+source .venv/bin/activate
+python -m redis_lab.cache --ttl 3
+python -m unittest -v test_redis_lab
+```
+
+Pub/Sub: сначала `python -m redis_lab.subscriber`, затем в другом терминале
+`python -m redis_lab.publisher "Привет"`.
+Очередь: `python -m redis_lab.task_queue 10 20 30`, затем
+`python -m redis_lab.worker --once`.
+
 ## MongoDB — вложенные документы, индексы и аналитика
 
 Новая работа: [mongo_orders.py](mongo_orders.py), отчёт для сдачи —
