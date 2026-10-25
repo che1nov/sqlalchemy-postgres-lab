@@ -3,6 +3,22 @@
 Учебный проект по базам данных: SQLAlchemy Core, SQLAlchemy ORM, Alembic и PostgreSQL.
 Работы по MongoDB и Redis также сохранены в репозитории.
 
+## Docker, резервное копирование и GitHub Actions
+
+Инструкция и материалы для сдачи: [LMS_DOCKER_BACKUP.md](LMS_DOCKER_BACKUP.md).
+
+```bash
+docker compose -p specdb up --build -d
+docker compose -p specdb logs app
+./scripts/backup_postgres.sh
+./scripts/backup_mongodb.sh
+```
+
+Сервис `app` применяет миграции, запускает консольную ORM-демонстрацию и успешно
+завершается; базы продолжают работать. Архивы сохраняются в `backups/`.
+Workflow `Docker build and backup restore` собирает образ, запускает все тесты
+и проверяет восстановление резервных копий в отдельные временные БД.
+
 ## Redis — TTL, Pub/Sub и очередь задач
 
 Код: [redis_lab](redis_lab). Инструкция для запуска и сдачи:

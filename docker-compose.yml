@@ -1,4 +1,19 @@
 services:
+  app:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://specdb:specdb@postgres:5432/specdb
+      MONGODB_URI: mongodb://mongodb:27017
+      MONGODB_DATABASE: specdb
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
   postgres:
     image: postgres:16-alpine
     container_name: specdb-postgres
@@ -10,6 +25,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
 
   mongodb:
     image: mongo:7
@@ -18,6 +38,11 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand({ping: 1})"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
 
   redis:
     image: redis:7-alpine
@@ -27,6 +52,11 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
 
 volumes:
   postgres_data:
