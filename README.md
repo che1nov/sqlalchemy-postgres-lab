@@ -3,6 +3,21 @@
 Учебный проект по базам данных: SQLAlchemy Core, SQLAlchemy ORM, Alembic и PostgreSQL.
 Работы по MongoDB и Redis также сохранены в репозитории.
 
+## PostgreSQL — pytest, фикстуры и Faker
+
+Код: [tests/postgres](tests/postgres). Инструкция для сдачи:
+[LMS_PYTEST.md](LMS_PYTEST.md).
+21 тест проверяет ORM CRUD, каскады и негативные сценарии ограничений БД.
+Каждый тест изолирован транзакцией с откатом; данные создаются с Faker.
+
+```bash
+source .venv/bin/activate
+pip install -r requirements-test.txt
+docker compose -p specdb up -d --wait postgres
+alembic upgrade head
+python -m pytest -v
+```
+
 ## Docker, резервное копирование и GitHub Actions
 
 Инструкция и материалы для сдачи: [LMS_DOCKER_BACKUP.md](LMS_DOCKER_BACKUP.md).
