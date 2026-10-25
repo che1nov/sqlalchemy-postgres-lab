@@ -3,6 +3,17 @@
 Учебный проект по базам данных: SQLAlchemy Core, SQLAlchemy ORM, Alembic и PostgreSQL.
 Работы по MongoDB и Redis также сохранены в репозитории.
 
+## SQL-инъекции, права PostgreSQL и аутентификация MongoDB
+
+Материалы для сдачи: [LMS_SECURITY.md](LMS_SECURITY.md).
+Отдельный стенд на портах 5433/27018 не меняет доступ к БД предыдущих работ.
+
+```bash
+./scripts/setup_security.sh
+docker compose --env-file security/.env -f docker-compose.security.yml -p specdb-security run --build --rm demo
+docker compose --env-file security/.env -f docker-compose.security.yml -p specdb-security run --rm demo python -m unittest -v security_lab.test_security
+```
+
 ## PostgreSQL — pytest, фикстуры и Faker
 
 Код: [tests/postgres](tests/postgres). Инструкция для сдачи:

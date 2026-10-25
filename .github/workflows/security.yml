@@ -1,0 +1,21 @@
+name: Database security lab
+
+on: [push, pull_request, workflow_dispatch]
+
+permissions:
+  contents: read
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate temporary credentials and initialize databases
+        run: ./scripts/setup_security.sh
+      - name: Build and run demonstration
+        run: docker compose --env-file security/.env -f docker-compose.security.yml -p specdb-security run --build --rm demo
+      - name: Verify parameterization and database permissions
+        run: docker compose --env-file security/.env -f docker-compose.security.yml -p specdb-security run --rm demo python -m unittest -v security_lab.test_security
+      - name: Clean up temporary CI environment
+        if: always()
+        run: docker compose --env-file security/.env -f docker-compose.security.yml -p specdb-security down -v

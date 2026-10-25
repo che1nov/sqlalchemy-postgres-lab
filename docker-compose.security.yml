@@ -1,0 +1,53 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: security_lab
+      POSTGRES_USER: lab_admin
+      POSTGRES_PASSWORD: ${PG_ADMIN_PASSWORD:?Run scripts/setup_security.sh first}
+      PG_APP_PASSWORD: ${PG_APP_PASSWORD:?Run scripts/setup_security.sh first}
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - security_postgres:/var/lib/postgresql/data
+      - ./security/postgres-init.sh:/docker-entrypoint-initdb.d/01-init.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+
+  mongodb:
+    image: mongo:7
+    command: ["mongod", "--auth", "--bind_ip_all"]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: lab_admin
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ADMIN_PASSWORD:?Run scripts/setup_security.sh first}
+      MONGO_APP_PASSWORD: ${MONGO_APP_PASSWORD:?Run scripts/setup_security.sh first}
+    ports:
+      - "127.0.0.1:27018:27017"
+    volumes:
+      - security_mongodb:/data/db
+      - ./security/mongo-init.js:/docker-entrypoint-initdb.d/01-init.js:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand({ping: 1})"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+
+  demo:
+    build: .
+    environment:
+      SECURITY_DATABASE_URL: postgresql+psycopg://lab_app:${PG_APP_PASSWORD:?required}@postgres:5432/security_lab
+      SECURITY_MONGODB_URI: mongodb://lab_app:${MONGO_APP_PASSWORD:?required}@mongodb:27017/security_lab?authSource=security_lab
+      SECURITY_MONGODB_NOAUTH_URI: mongodb://mongodb:27017/security_lab
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    command: ["python", "-m", "security_lab.demo"]
+
+volumes:
+  security_postgres:
+  security_mongodb:
