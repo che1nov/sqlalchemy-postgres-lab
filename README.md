@@ -6,7 +6,7 @@
 ## Анализ данных и визуализация
 
 Выполненная тетрадка: [analysis_lab/data_analysis.ipynb](analysis_lab/data_analysis.ipynb).
-Инструкция для Colab и сдачи: [LMS_ANALYSIS.md](LMS_ANALYSIS.md).
+Краткий отчёт: [LMS_ANALYSIS.md](LMS_ANALYSIS.md).
 Данные из тетрадки преподавателя проходят путь Excel → JSON → SQLite → pandas:
 очистка дубликатов и выбросов, статистики по городам, столбиковые диаграммы и выводы.
 
