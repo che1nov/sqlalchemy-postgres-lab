@@ -1,0 +1,48 @@
+services:
+  api:
+    build:
+      context: .
+      target: runtime
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      TRACKER_DATABASE_URL: postgresql+psycopg://tracker:tracker_local@postgres:5432/tracker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: tracker
+      POSTGRES_USER: tracker
+      POSTGRES_PASSWORD: tracker_local
+    ports:
+      - "127.0.0.1:5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tracker -d tracker"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  tests:
+    profiles: ["tools"]
+    build:
+      context: .
+      target: tests
+    environment:
+      TRACKER_TEST_DATABASE_URL: postgresql+psycopg://tracker:tracker_local@postgres:5432/postgres
+      PYTEST_ADDOPTS: "-o cache_dir=/tmp/pytest-cache"
+    depends_on:
+      postgres:
+        condition: service_healthy
+volumes:
+  postgres_data:

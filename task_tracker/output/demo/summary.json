@@ -1,0 +1,62 @@
+{
+  "status": {
+    "total": 12,
+    "done": 6,
+    "completion_rate": 50.0,
+    "group_by": "status",
+    "groups": [
+      {
+        "key": "new",
+        "count": 2
+      },
+      {
+        "key": "in_progress",
+        "count": 3
+      },
+      {
+        "key": "done",
+        "count": 6
+      },
+      {
+        "key": "cancelled",
+        "count": 1
+      }
+    ]
+  },
+  "topic": {
+    "total": 12,
+    "done": 6,
+    "completion_rate": 50.0,
+    "group_by": "topic",
+    "groups": [
+      {
+        "key": "API",
+        "count": 4
+      },
+      {
+        "key": "Database",
+        "count": 4
+      },
+      {
+        "key": "Tests",
+        "count": 4
+      }
+    ]
+  },
+  "assignee": {
+    "total": 12,
+    "done": 6,
+    "completion_rate": 50.0,
+    "group_by": "assignee",
+    "groups": [
+      {
+        "key": "1",
+        "count": 6
+      },
+      {
+        "key": "unassigned",
+        "count": 6
+      }
+    ]
+  }
+}

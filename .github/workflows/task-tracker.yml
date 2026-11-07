@@ -1,0 +1,35 @@
+name: Task Tracker
+
+on:
+  push:
+    paths: ['task_tracker/**', '.github/workflows/task-tracker.yml']
+  pull_request:
+    paths: ['task_tracker/**', '.github/workflows/task-tracker.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: task_tracker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: task_tracker/requirements.lock
+      - run: pip install -r requirements-dev.txt -c requirements.lock
+      - run: docker compose -p tracker-ci up --build -d --wait
+      - run: docker compose -p tracker-ci --profile tools run --build --rm tests
+      - run: python -m scripts.demo
+      - name: Logs on failure
+        if: failure()
+        run: docker compose -p tracker-ci logs --no-color
+      - name: Cleanup
+        if: always()
+        run: docker compose -p tracker-ci down -v

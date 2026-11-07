@@ -3,6 +3,20 @@
 Учебный проект по базам данных: SQLAlchemy Core, SQLAlchemy ORM, Alembic и PostgreSQL.
 Работы по MongoDB и Redis также сохранены в репозитории.
 
+## Чернов Илья — Итоговое задание — Трекер задач
+
+Самостоятельный сервис на FastAPI: [task_tracker/README.md](task_tracker/README.md).
+CRUD, фильтры, статусы, аутентификация, PostgreSQL/Alembic, pandas/matplotlib, pytest,
+ERD и HTTP-демонстрация. Старые лабораторные запускаются отдельно.
+
+```bash
+cd task_tracker
+docker compose -p specdb-tracker up --build -d --wait
+```
+
+API и интерактивная демонстрация: <http://localhost:8000/docs>.
+Материалы для LMS: [task_tracker/docs/submission.md](task_tracker/docs/submission.md).
+
 ## Анализ данных и визуализация
 
 Выполненная тетрадка: [analysis_lab/data_analysis.ipynb](analysis_lab/data_analysis.ipynb).
