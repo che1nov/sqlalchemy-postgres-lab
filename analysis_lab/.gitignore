@@ -1,0 +1,5 @@
+.ipynb_checkpoints/
+bank_analysis.sqlite3
+bank_dataset.xlsx
+bank_dataset.json
+results/
